@@ -82,6 +82,7 @@
 (defmethod setup-scene ((main main) scene)
   (enter (make-instance 'fade) scene)
   (enter (make-instance 'camera) scene)
+  (enter (make-instance 'trial:fps-counter) scene)
   (let ((shadow (make-instance 'shadow-map-pass))
         (lighting (make-instance 'lighting-pass))
         (rendering (make-instance 'rendering-pass))
@@ -115,4 +116,3 @@
   (when harmony:*server*
     (loop for (k v) on value by #'cddr
           do (setf (harmony:volume k) v))))
-
