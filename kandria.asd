@@ -51,6 +51,7 @@
                (:file "effects")
                (:file "displacement")
                (:module "ui"
+                :serial t
                 :components ((:file "general")
                              (:file "components")
                              (:file "dialog")
