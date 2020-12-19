@@ -25,7 +25,7 @@
 
 (define-gl-struct gi
   (activep :int :accessor active-p)
-  (location :vec2 :accessor location)
+  (location :vec2 :accessor %location)
   (light :vec3 :accessor light)
   (ambient :vec3 :accessor ambient)
   (attenuation :float :accessor attenuation))
@@ -115,7 +115,7 @@
               (setf location loc)))))
     (with-buffer-tx (gi (// 'kandria 'gi))
       (setf (active-p gi) (if location 1 0))
-      (setf (location gi) (or location (vec 0 0)))
+      (setf (%location gi) (or location (vec 0 0)))
       (setf (light gi) light)
       (setf (ambient gi) ambient)
       (setf (attenuation gi) attenuation))))
