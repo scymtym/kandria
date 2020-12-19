@@ -180,7 +180,7 @@
   (defmethod handle ((ev mouse-scroll) (player player))
     (setf type (cycle-list type))
     (status :note "Switched to spawning ~a" (first type)))
-  
+
   (defmethod handle ((ev mouse-release) (player player))
     (when (eql :middle (button ev))
       (let ((enemy (make-instance (first type) :location (mouse-world-pos (pos ev)))))
@@ -397,7 +397,7 @@
          (when (scan-collision +world+ (vec (vx loc) (vy loc) 16 32))
            (decf (vy loc) 16))
          (setf (state player) :normal))
-       
+
        (cond ((retained 'left)
               (setf (vx vel) (- (p! crawl))))
              ((retained 'right)
@@ -441,7 +441,7 @@
                                       (* 0.25 (max 0 (vy (velocity ground))))
                                       0)))
                 (setf (jump-time player) 0.0))))
-       
+
        ;; Test for climbing
        (when (and (retained 'climb)
                   (not (retained 'jump))

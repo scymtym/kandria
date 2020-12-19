@@ -227,7 +227,7 @@ vec4 apply_lighting(vec4 color, vec2 offset, float absorption, vec2 normal, vec2
 
   truecolor *= gi.ambient;
   truecolor += light.rgb*max(0, light.a-absorption)*color.rgb;
-  
+
   if(gi.activep != 0){
     float incidence = 1.0;
     vec2 dir = gi.location - world_pos;

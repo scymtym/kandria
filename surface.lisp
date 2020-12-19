@@ -47,7 +47,8 @@
       (make 'stopper)
       blocks)))
 
-(sb-ext:defglobal +surface-blocks+ NIL)
+(declaim (type (simple-array t 1) +surface-blocks+))
+(sb-ext:defglobal +surface-blocks+ #())
 (setf +surface-blocks+ (make-surface-blocks +tile-size+ '(1 2 3)))
 
 (defmethod velocity ((block block))
@@ -56,14 +57,24 @@
 (defun aabb (seg-pos seg-vel aabb-pos aabb-size)
   (declare (type vec2 seg-pos seg-vel aabb-pos aabb-size))
   (declare (optimize speed))
-  (let* ((scale-x (if (= 0 (vx2 seg-vel)) 1000000f0 (/ (vx2 seg-vel))))
-         (scale-y (if (= 0 (vy2 seg-vel)) 1000000f0 (/ (vy2 seg-vel))))
-         (sign-x (if (<= 0. (vx2 seg-vel)) +1. -1.))
-         (sign-y (if (<= 0. (vy2 seg-vel)) +1. -1.))
-         (near-x (* (- (vx2 aabb-pos) (* sign-x (vx2 aabb-size)) (vx2 seg-pos)) scale-x))
-         (near-y (* (- (vy2 aabb-pos) (* sign-y (vy2 aabb-size)) (vy2 seg-pos)) scale-y))
-         (far-x (* (- (+ (vx2 aabb-pos) (* sign-x (vx2 aabb-size))) (vx2 seg-pos)) scale-x))
-         (far-y (* (- (+ (vy2 aabb-pos) (* sign-y (vy2 aabb-size))) (vy2 seg-pos)) scale-y)))
+  (let* ((x (vx2 seg-vel))
+         (y (vy2 seg-vel))
+         (bx (vx2 aabb-pos))
+         (by (vy2 aabb-pos))
+         (sx (vx2 aabb-size))
+         (sy (vy2 aabb-size))
+         (spx (vx2 seg-pos))
+         (spy (vy2 seg-pos))
+         (scale-x (if (= 0 x) 1000000f0 (/ x)))
+         (scale-y (if (= 0 y) 1000000f0 (/ y)))
+         (sign-x (if (<= 0.0f0 x) +1.0f0 -1.0f0))
+         (sign-y (if (<= 0.0f0 y) +1.0f0 -1.0f0))
+         (ssx (* sign-x sx))
+         (ssy (* sign-y sy) )
+         (near-x (* (- bx ssx spx) scale-x))
+         (near-y (* (- by ssy spy) scale-y))
+         (far-x (* (- (+ bx ssx) spx) scale-x))
+         (far-y (* (- (+ by ssy) spy) scale-y)))
     (unless (or (< far-y near-x)
                 (< far-x near-y))
       (let ((t-near (max near-x near-y))
@@ -83,7 +94,7 @@
               ;; KLUDGE: This test is necessary in order to ignore vertical edges
               ;;         that seem to stick out of the blocks. I have no idea why.
               (unless (and (/= 0 (vy2 normal))
-                           (<= (vx2 aabb-size) (abs (- (vx2 aabb-pos) (vx2 seg-pos)))))
+                           (<= sx (abs (- bx spx))))
                 (make-hit NIL
                           aabb-pos
                           t-near
@@ -117,4 +128,3 @@
                      (or (<= -1.0 t1 1.0)
                          (< (vy pos) (+ yrel (vy loc)))))
             t1))))))
-

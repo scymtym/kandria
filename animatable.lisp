@@ -28,10 +28,8 @@
 (defmethod minimum-idle-time ((animatable animatable)) 10)
 
 (defmethod apply-transforms progn ((animatable animatable))
-  (let ((frame (frame animatable)))
-    (translate-by (vx (offset frame))
-                  (vy (offset frame))
-                  0)))
+  (let ((offset (offset (frame animatable))))
+    (translate-by (vx offset) (vy offset) 0)))
 
 (defmethod hurtbox ((animatable animatable))
   (let* ((location (location animatable))

@@ -1,5 +1,6 @@
 (in-package #:org.shirakumo.fraf.kandria)
 
+(declaim (type (integer 1 256) +tile-size+))
 (define-global +tile-size+ 16)
 (define-global +layer-count+ 6)
 (define-global +base-layer+ 2)
