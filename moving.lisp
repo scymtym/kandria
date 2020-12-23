@@ -7,6 +7,7 @@
    (medium :initform +default-medium+ :accessor medium)))
 
 (defgeneric mediump (thing)
+  (:generic-function-class faster-generic-dispatch::inline-cache-fast-generic-function)
   (:method ((thing medium))
     t)
   (:method ((thing t))

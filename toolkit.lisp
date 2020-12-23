@@ -238,14 +238,18 @@
 ;; Scan through TARGET to find REGION. When a match is found, invoke ON-HIT
 ;; with a HIT instance. If ON-HIT returns true, the scan continues, otherwise
 ;; the HIT instance is returned.
-(defgeneric scan (target region on-hit))
+(defgeneric scan (target region on-hit)
+  (:generic-function-class faster-generic-dispatch::inline-cache-fast-generic-function))
 ;; Similar to SCAN, but checks whether a HIT is valid through COLLIDES-P, and
 ;; returns the closest HIT instance, if any.
-(defgeneric scan-collision (target region))
+(defgeneric scan-collision (target region)
+  (:generic-function-class faster-generic-dispatch::inline-cache-fast-generic-function))
 ;; Should return T if the HIT should actually be counted as a valid collision.
-(defgeneric collides-p (object tested hit))
+(defgeneric collides-p (object tested hit)
+  (:generic-function-class faster-generic-dispatch::inline-cache-fast-generic-function))
 ;; Returns T if TARGET is contained in THING.
-(defgeneric contained-p (target thing))
+(defgeneric contained-p (target thing)
+  (:generic-function-class faster-generic-dispatch::inline-cache-fast-generic-function))
 
 (defmethod contained-p ((point vec2) (rect vec4))
   (and (<= (- (vx4 rect) (vz4 rect)) (vx2 point) (+ (vx4 rect) (vz4 rect)))
@@ -260,6 +264,7 @@
 (defmethod collides-p (object (target solid) hit) T)
 
 (defgeneric classify-hit-object (object)
+  (:generic-function-class faster-generic-dispatch::inline-cache-fast-generic-function)
   (:method ((object solid))
     nil)
   (:method ((object t))
@@ -280,7 +285,8 @@
 
 ;; Handle response to a collision of OBJECT with the TESTED entity on HIT.
 ;; HIT-OBJECT of the HIT instance must be EQ to TESTED.
-(defgeneric collide (object tested hit))
+(defgeneric collide (object tested hit)
+  (:generic-function-class faster-generic-dispatch::inline-cache-fast-generic-function))
 
 (defmethod entity-at-point (point thing)
   NIL)
