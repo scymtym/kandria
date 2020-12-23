@@ -130,7 +130,7 @@
       (let ((a (a backgrounds))
             (b (b backgrounds)))
         (when (and info (not (eq (texture info) (texture-b background))))
-          (setf (mix backgrounds) (- 1.0 (min 1.0 (mix backgrounds))))
+          (setf (mix backgrounds) (- 1.0f0 (min 1.0f0 (mix backgrounds))))
           ;; First move the target to be the source
           (setf (texture-a background) (or (texture-b background) (texture info)))
           (setf (parallax a) (parallax b))
@@ -152,7 +152,7 @@
 (defmethod handle ((ev tick) (background background))
   (when (< (mix (struct (// 'kandria 'backgrounds))) 1)
     (with-buffer-tx (backgrounds (// 'kandria 'backgrounds))
-      (incf (mix backgrounds) (dt ev)))))
+      (incf (mix backgrounds) (coerce (dt ev) 'single-float)))))
 
 (define-class-shader (background :vertex-shader)
   (gl-source (asset 'kandria 'backgrounds))

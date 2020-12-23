@@ -50,13 +50,13 @@
   (when (< (+ (vy (bsize water)) (vy (location water)))
            (vy (location entity)))
     (nudge water (location entity)
-           (clamp 0.5 (* 2 (abs (vy (velocity entity)))) 10.0))))
+           (clamp 0.5f0 (* 2 (abs (vy (velocity entity)))) 10.0f0))))
 
 (defmethod leave ((entity game-entity) (water water))
   (when (< (+ (vy (bsize water)) (vy (location water)))
            (vy (location entity)))
     (nudge water (location entity)
-           (clamp 0.5 (* 2 (abs (vy (velocity entity)))) 10.0))))
+           (clamp 0.5f0 (* 2 (abs (vy (velocity entity)))) 10.0f0))))
 
 (defmethod handle ((ev tick) (water water))
   (declare (optimize speed))
@@ -64,7 +64,7 @@
         (prev (prev water))
         (h (vy (bsize water)))
         (c (float (* (dt ev) (dt ev) 4000.0) 0f0))
-        (damp 0.97))
+        (damp 0.97f0))
     (declare (type (simple-array single-float (*)) data prev))
     ;; Discretized wave equation. We only care about i*4+3 indexes, as
     ;; those are the top edges. We then store our result for the next iteration

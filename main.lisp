@@ -31,7 +31,7 @@
                (make-instance 'save-state)))))
 
 (defmethod update ((main main) tt dt fc)
-  (issue (scene main) 'tick :tt tt :dt (* (time-scale (scene main)) (float dt 1.0)) :fc fc)
+  (issue (scene main) 'tick :tt tt :dt (* (time-scale (scene main)) (float dt 1.0f0)) :fc fc)
   (process (scene main)))
 
 (defmethod setup-rendering :after ((main main))

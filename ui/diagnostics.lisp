@@ -63,7 +63,7 @@
     (thrashing-count :uint64)
     (thrashing-delay :uint64)
     (btime-64 :uint64))
-  
+
   (cffi:defcstruct timeval
     (a :uint64)
     (b :uint64))
@@ -115,11 +115,11 @@
    :font "NotoSansMono"))
 
 (defclass diagnostics (panel alloy:observable-object)
-  ((fps :initform (make-array 600 :initial-element 0.0 :element-type 'single-float))
-   (ram :initform (make-array 600 :initial-element 0.0 :element-type 'single-float))
-   (vram :initform (make-array 600 :initial-element 0.0 :element-type 'single-float))
-   (io :initform (make-array 600 :initial-element 0.0 :element-type 'single-float))
-   (gc :initform (make-array 600 :initial-element 0.0 :element-type 'single-float))
+  ((fps :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
+   (ram :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
+   (vram :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
+   (io :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
+   (gc :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
    (info :initform "")
    (last-io :initform 0)
    (last-gc :initform 0)))

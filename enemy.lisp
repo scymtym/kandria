@@ -254,9 +254,9 @@
 
 (defmethod movement-speed ((enemy zombie))
   (case (state enemy)
-    (:stand 0.0)
-    (:walk 0.1)
-    (:approach 0.2)
+    (:stand 0.0f0)
+    (:walk 0.1f0)
+    (:approach 0.2f0)
     (T 1.0)))
 
 (defmethod handle-ai-states ((enemy zombie) ev)

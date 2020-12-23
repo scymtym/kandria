@@ -113,11 +113,11 @@
              24 (0.0627451 0.0 0.23921569)))
 
 (define-gi dark
-  :attenuation 1.6
+  :attenuation 1.6f0
   :location 'player
-  :light-multiplier 1.0
+  :light-multiplier 1.0f0
   :light (vec 2 1 0.5)
-  :ambient-multiplier 0.1
+  :ambient-multiplier 0.1f0
   :ambient (vec 0.3 0.1 0.1))
 
 (define-gi desert
@@ -126,14 +126,14 @@
            9 (6 5 4)
            15 (6 5 4)
            18 (0 0 0))
-  :light-multiplier 1.0
-  :ambient '(0 (0.1 0.1 4.0)
+  :light-multiplier 1.0f0
+  :ambient '(0 (0.1f0 0.1f0 4.0f0)
              6 (1 0.5 0.6)
              9 (1 0.6 0.6)
              15 (1 0.6 0.6)
              18 (1 0.5 0.6)
-             24 (0.1 0.1 4.0))
-  :ambient-multiplier 0.5)
+             24 (0.1f0 0.1f0 4.0f0))
+  :ambient-multiplier 0.5f0)
 
 (define-bg tundra
   :wrapping '(:repeat :clamp-to-edge :clamp-to-edge)

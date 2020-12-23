@@ -38,9 +38,9 @@
    (location :initform NIL :initarg :location :accessor location)
    (light :initform NIL :initarg :light :accessor light)
    (ambient :initform 1 :initarg :ambient :accessor ambient)
-   (attenuation :initform 0.0 :initarg :attenuation :accessor attenuation)))
+   (attenuation :initform 0.0f0 :type single-float :initarg :attenuation :accessor attenuation)))
 
-(defmethod shared-initialize :after ((info gi-info) slots &key (light-multiplier 1.0) (ambient-multiplier 1.0))
+(defmethod shared-initialize :after ((info gi-info) slots &key (light-multiplier 1.0f0) (ambient-multiplier 1.0f0))
   (flet ((normalize-light (light mult)
            (etypecase light
              (null (vec 0 0 0))
@@ -90,7 +90,7 @@
 (define-shader-pass lighting-pass (scene-pass per-object-pass hdr-output-pass)
   ((gi-a :initform (make-instance 'gi-info) :accessor gi-a)
    (gi-b :initform (make-instance 'gi-info) :accessor gi-b)
-   (mix :initform 1.0 :accessor mix)
+   (mix :initform 1.0f0 :type single-float :accessor mix)
    (name :initform 'lighting-pass)))
 
 (defmethod render :before ((pass lighting-pass) target)
@@ -122,7 +122,7 @@
 
 (defmethod (setf lighting) ((value gi-info) (pass lighting-pass))
   (unless (eql (gi-b pass) value)
-    (setf (mix pass) (- 1.0 (min 1.0 (mix pass))))
+    (setf (mix pass) (- 1.0f0 (min 1.0f0 (mix pass))))
     (setf (gi-a pass) (gi-b pass))
     (setf (gi-b pass) value)
     (update-lighting pass))
@@ -132,7 +132,7 @@
   (gi-b pass))
 
 (defmethod force-lighting ((pass lighting-pass))
-  (setf (mix pass) 1.0)
+  (setf (mix pass) 1.0f0)
   (update-lighting pass))
 
 (defmethod handle ((ev force-lighting) (pass lighting-pass))
@@ -154,10 +154,10 @@
 
 (define-shader-pass rendering-pass (render-pass)
   ((lighting :port-type input :texspec (:internal-format :rgba16f))
-   (local-shade :initform 0.15 :accessor local-shade)
+   (local-shade :initform 0.15f0 :accessor local-shade)
    (shadow-map :port-type input)
-   (exposure :initform 0.5 :accessor exposure)
-   (gamma :initform 2.2 :accessor gamma)
+   (exposure :initform 0.5f0 :accessor exposure)
+   (gamma :initform 2.2f0 :accessor gamma)
    (name :initform 'render)
    #++(color :port-type output :attachment :color-attachment0
           :texspec (:width 640 :height 416))
@@ -186,16 +186,16 @@
         (let* ((shade (local-shade (flow:other-node pass (first (flow:connections (flow:port pass 'shadow-map))))))
                (current (local-shade pass)))
           (let ((intensity (light-intensity gi current)))
-            (setf (exposure pass) (clamp 0.5 (- 3.5 intensity) 10.0)
-                  (gamma pass) (clamp 0.5 (- 3.75 intensity) 3.0)))
-          (setf (local-shade pass) (cond ((< (abs (- current shade)) 0.05)
+            (setf (exposure pass) (clamp 0.5f0 (- 3.5 intensity) 10.0f0)
+                  (gamma pass) (clamp 0.5f0 (- 3.75f0 intensity) 3.0f0)))
+          (setf (local-shade pass) (cond ((< (abs (- current shade)) 0.05f0)
                                           shade)
                                          ((< current shade)
-                                          (+ current 0.02))
+                                          (+ current 0.02f0))
                                          (T
-                                          (- current 0.02)))))
-        (setf (exposure pass) 0.5
-              (gamma pass) 2.2))))
+                                          (- current 0.02f0)))))
+        (setf (exposure pass) 0.5f0
+              (gamma pass) 2.2f0))))
 
 (define-class-shader (rendering-pass :fragment-shader -100)
   "out vec4 color;
