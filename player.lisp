@@ -418,7 +418,7 @@
                     (and (typep (interactable player) 'rope)
                          (extended (interactable player))))
                 ;; Wall jump
-                (let ((dir (if (svref collisions 1) -1.0 1.0))
+                (let ((dir (if (svref collisions 1) -1 1))
                       (mov-dir (cond ((retained 'left) -1)
                                      ((retained 'right) +1)
                                      (T 0))))

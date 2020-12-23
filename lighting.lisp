@@ -143,7 +143,7 @@
 
 (defmethod handle ((ev tick) (pass lighting-pass))
   (when (< (mix pass) 1)
-    (incf (mix pass) (dt ev)))
+    (incf (mix pass) (float (dt ev) 1.0f0)))
   (update-lighting pass))
 
 (define-shader-entity light (vertex-entity sized-entity)

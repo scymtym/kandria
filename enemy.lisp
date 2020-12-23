@@ -286,7 +286,7 @@
              ((< (abs (- (vx ploc) (vx eloc))) (* +tile-size+ 1))
               (start-animation 'attack enemy))
              (T
-              (setf (direction enemy) (signum (- (vx ploc) (vx eloc))))
+              (setf (direction enemy) (floor (signum (- (vx ploc) (vx eloc)))))
               (setf (vx vel) (* (direction enemy) (movement-speed enemy)))))))))
 
 (defmethod hit ((enemy zombie) location)

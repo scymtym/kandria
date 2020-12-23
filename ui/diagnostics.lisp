@@ -148,7 +148,8 @@ Health:             ~d
 Stun:               ~7,2f
 Iframes:            ~d"
             (name (region +world+))
-            (name (chunk player))
+            (let ((chunk (chunk player)))
+              (if chunk (name chunk) "<no current chunk>"))
             (vx (location player)) (vy (location player))
             (vx (velocity player)) (vy (velocity player))
             (state player)
