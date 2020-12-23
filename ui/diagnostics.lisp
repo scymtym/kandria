@@ -115,7 +115,7 @@
    :font "NotoSansMono"))
 
 (defclass diagnostics (panel alloy:observable-object)
-  ((fps :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
+  ((fps :initform (make-array '(600 3) :initial-element 0.0f0 :element-type 'single-float))
    (ram :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
    (vram :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
    (io :initform (make-array 600 :initial-element 0.0f0 :element-type 'single-float))
@@ -161,7 +161,7 @@ Iframes:            ~d"
 (defmethod initialize-instance :after ((panel diagnostics) &key)
   (let ((layout (make-instance 'org.shirakumo.alloy.layouts.constraint:layout))
         (fps (alloy:represent (slot-value panel 'fps) 'alloy:plot
-                              :y-range '(1 . 60) :style `((:curve :line-width ,(alloy:un 2)))))
+                              :y-range '(0 . 100000) :style `((:curve :line-width ,(alloy:un 2)))))
         (ram (alloy:represent (slot-value panel 'ram) 'alloy:plot
                               :y-range `(0 . ,(nth-value 1 (cpu-room))) :style `((:curve :line-width ,(alloy:un 2)))))
         (vram (alloy:represent (slot-value panel 'vram) 'alloy:plot
@@ -192,9 +192,16 @@ Iframes:            ~d"
              (declare (type (simple-array single-float (*)) array))
              (loop for i from 1 below (length array)
                    do (setf (aref array (1- i)) (aref array i)))
-             (setf (aref array (1- (length array))) (float value 1f0))))
+             (setf (aref array (1- (length array))) (float value 1f0)))
+           (push-value* (value index array)
+             (declare (type (simple-array single-float 2) array))
+             (loop for i from 1 below (array-dimension array 0)
+                   do (setf (aref array (1- i) index) (aref array i index)))
+             (setf (aref array (1- (array-dimension array 0)) index) (float value 1f0))))
       (let ((frame-time (frame-time (handler *context*))))
-        (push-value (if (= 0 frame-time) 1 (/ frame-time)) fps))
+        (push-value* (nth 0 *last-times*) 2 fps)
+        (push-value* (nth 1 *last-times*) 0 fps)
+        (push-value* (nth 2 *last-times*) 1 fps))
       (alloy:notify-observers 'fps panel fps panel)
       (multiple-value-bind (free total) (cpu-room)
         (push-value (- total free) ram))

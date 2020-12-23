@@ -30,9 +30,19 @@
                (save-state (scene main) (quicksave main))
                (make-instance 'save-state)))))
 
+(defvar *last-times* (list nil nil nil))
+
+(defmacro with-timing ((which) &body body)
+  (let ((start (gensym "START")))
+    `(let ((,start (get-internal-real-time)))
+       (progn
+         ,@body)
+       (setf (nth ,which *last-times*) (- (get-internal-real-time) ,start)))))
+
 (defmethod update ((main main) tt dt fc)
   (issue (scene main) 'tick :tt tt :dt (* (time-scale (scene main)) (float dt 1.0f0)) :fc fc)
-  (process (scene main)))
+  (with-timing (2)
+    (process (scene main))))
 
 (defmethod setup-rendering :after ((main main))
   (disable :cull-face :scissor-test :depth-test))
