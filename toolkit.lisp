@@ -258,8 +258,15 @@
 (defmethod collides-p (object target hit) NIL)
 (defmethod collides-p (object (target solid) hit) T)
 
+(defgeneric classify-hit-object (object)
+  (:method ((object solid))
+    nil)
+  (:method ((object t))
+    t))
+
 (defmethod scan-collision (target region)
-  (scan target region (lambda (hit) (unless (typep (hit-object hit) '(or block solid)) T))))
+  (scan target region (lambda (hit)
+                        (classify-hit-object (hit-object hit)))))
 
 ;; Handle common collision operations. Uses SCAN-COLLISION to find the closest
 ;; valid HIT, then invokes COLLIDE using that hit, if any. Returns the closest

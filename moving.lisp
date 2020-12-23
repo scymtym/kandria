@@ -6,6 +6,12 @@
   ((collisions :initform (make-array 4 :initial-element NIL) :reader collisions)
    (medium :initform +default-medium+ :accessor medium)))
 
+(defgeneric mediump (thing)
+  (:method ((thing medium))
+    t)
+  (:method ((thing t))
+    nil))
+
 (defmethod handle ((ev tick) (moving moving))
   (when (next-method-p) (call-next-method))
   (let ((loc (location moving))
@@ -13,7 +19,7 @@
         (collisions (collisions moving)))
     ;; Scan for medium
     (for:for ((entity over (region +world+)))
-      (when (and (typep entity 'medium)
+      (when (and (mediump entity)
                  (contained-p entity moving))
         (setf (medium moving) entity)
         (return))
